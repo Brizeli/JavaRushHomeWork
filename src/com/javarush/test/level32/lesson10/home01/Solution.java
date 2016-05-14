@@ -33,7 +33,6 @@ public class Solution {
             } catch (NotBoundException e) {
                 e.printStackTrace();
             }
-            //TODO add your code here - добавьте код тут
         }
     });
 
@@ -55,5 +54,12 @@ public class Solution {
         //start client
         CLIENT_THREAD.start();
         CLIENT_THREAD.join();
+        try {
+            registry.unbind(UNIC_BINDING_NAME);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
     }
 }
