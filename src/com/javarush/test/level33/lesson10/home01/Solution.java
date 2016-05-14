@@ -40,11 +40,9 @@ public class Solution {
 
         System.out.println(o.toString());
         //serialize test
-        StringWriter writer=new StringWriter();
         Marshaller marshaller = JAXBContext.newInstance(Shop.class).createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-        marshaller.marshal(o,writer);
-        System.out.println(writer);
+        marshaller.marshal(o,System.out);
     }
 
     public static Class getClassName() {
