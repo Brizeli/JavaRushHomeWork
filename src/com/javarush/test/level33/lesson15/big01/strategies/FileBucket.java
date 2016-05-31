@@ -1,6 +1,6 @@
 package com.javarush.test.level33.lesson15.big01.strategies;
 
-import com.javarush.test.level32.lesson15.big01.ExceptionHandler;
+import com.javarush.test.level33.lesson15.big01.ExceptionHandler;
 import com.javarush.test.level33.lesson15.big01.Helper;
 
 import java.io.ObjectInputStream;

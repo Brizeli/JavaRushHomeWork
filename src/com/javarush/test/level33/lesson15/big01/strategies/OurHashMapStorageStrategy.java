@@ -31,8 +31,8 @@ public class OurHashMapStorageStrategy implements StorageStrategy {
     }
 
     private void resize(int newCapacity) {
-        Entry[] oldTable = table;
-        int oldCapacity = oldTable.length;
+//        Entry[] oldTable = table;
+//        int oldCapacity = oldTable.length;
         Entry[] newTable = new Entry[newCapacity];
         transfer(newTable);
         table = newTable;
