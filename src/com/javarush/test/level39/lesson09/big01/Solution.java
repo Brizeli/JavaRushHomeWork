@@ -11,7 +11,8 @@ public class Solution {
 //        System.out.println(logParser.getIPsForEvent(Event.DONE_TASK, null, null));
 //        System.out.println(logParser.getIPsForStatus(Status.OK, null, new Date()));
 //        System.out.println(logParser.getIPsForUser("Vasya Pupkin",new Date(),null));
-        System.out.println(logParser.getDateWhenUserLoggedFirstTime("Eduard Petrovich Morozko",null,null));
+//        System.out.println(logParser.getDateWhenUserLoggedFirstTime("Eduard Petrovich Morozko",null,null));
+        System.out.println(logParser.execute("get status"));
     }
 
 }

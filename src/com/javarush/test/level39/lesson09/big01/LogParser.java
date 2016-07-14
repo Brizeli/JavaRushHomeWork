@@ -1,9 +1,6 @@
 package com.javarush.test.level39.lesson09.big01;
 
-import com.javarush.test.level39.lesson09.big01.query.DateQuery;
-import com.javarush.test.level39.lesson09.big01.query.EventQuery;
-import com.javarush.test.level39.lesson09.big01.query.IPQuery;
-import com.javarush.test.level39.lesson09.big01.query.UserQuery;
+import com.javarush.test.level39.lesson09.big01.query.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,10 +11,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
+public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery, QLQuery {
     private Path logDir;
     private List<Log> logs = new ArrayList<>();
+
 
     private class Log {
         String ip;
@@ -41,6 +41,17 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
             event = Event.valueOf(eventVal[0]);
             if (eventVal.length == 2) task = Integer.parseInt(eventVal[1]);
             status = Status.valueOf(ar[4]);
+        }
+    
+        public Object getField(String field) {
+            switch (field){
+                case "ip":return ip;
+                case "user":return userName;
+                case "date":return date;
+                case "event":return event;
+                case "status":return status;
+            }
+            return null;
         }
     }
 
@@ -340,6 +351,17 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
             }
         }
         return map;
+    }
+
+    @Override
+    public Set<Object> execute(String query) {
+        Pattern queryPattern = Pattern.compile("get (ip|user|date|event|status)");
+        Matcher matcher = queryPattern.matcher(query);
+        matcher.find();
+        String field1 = matcher.group(1);
+        Set<Object> resultSet = new HashSet<>();
+        for (Log log : getLogs()) resultSet.add(log.getField(field1));
+        return resultSet;
     }
 }
 
