@@ -1,6 +1,7 @@
 package com.javarush.test.level39.lesson09.big01;
 
 import com.javarush.test.level39.lesson09.big01.query.DateQuery;
+import com.javarush.test.level39.lesson09.big01.query.EventQuery;
 import com.javarush.test.level39.lesson09.big01.query.IPQuery;
 import com.javarush.test.level39.lesson09.big01.query.UserQuery;
 
@@ -14,7 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class LogParser implements IPQuery, UserQuery, DateQuery {
+public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
     private Path logDir;
     private List<Log> logs = new ArrayList<>();
 
@@ -257,6 +258,88 @@ public class LogParser implements IPQuery, UserQuery, DateQuery {
             if (user != null && log.userName.equalsIgnoreCase(user))
                 if (log.event == Event.DOWNLOAD_PLUGIN) dates.add(log.date);
         return dates;
+    }
+
+    @Override
+    public int getNumberOfAllEvents(Date after, Date before) {
+        return getAllEvents(after, before).size();
+    }
+
+    @Override
+    public Set<Event> getAllEvents(Date after, Date before) {
+        Set<Event> events = new HashSet<>();
+        for (Log log : getLogs(after, before)) events.add(log.event);
+        return events;
+    }
+
+    @Override
+    public Set<Event> getEventsForIP(String ip, Date after, Date before) {
+        Set<Event> events = new HashSet<>();
+        for (Log log : getLogs(after, before)) if (log.ip.equals(ip)) events.add(log.event);
+        return events;
+    }
+
+    @Override
+    public Set<Event> getEventsForUser(String user, Date after, Date before) {
+        Set<Event> events = new HashSet<>();
+        for (Log log : getLogs(after, before)) if (log.userName.equals(user)) events.add(log.event);
+        return events;
+    }
+
+    @Override
+    public Set<Event> getFailedEvents(Date after, Date before) {
+        Set<Event> events = new HashSet<>();
+        for (Log log : getLogs(after, before)) if (log.status == Status.FAILED) events.add(log.event);
+        return events;
+    }
+
+    @Override
+    public Set<Event> getErrorEvents(Date after, Date before) {
+        Set<Event> events = new HashSet<>();
+        for (Log log : getLogs(after, before)) if (log.status == Status.ERROR) events.add(log.event);
+        return events;
+    }
+
+    @Override
+    public int getNumberOfAttemptToSolveTask(int task, Date after, Date before) {
+        int res = 0;
+        for (Log log : getLogs(after, before))
+            if (log.event == Event.SOLVE_TASK && log.task == task) res++;
+        return res;
+    }
+
+    @Override
+    public int getNumberOfSuccessfulAttemptToSolveTask(int task, Date after, Date before) {
+        int res = 0;
+        for (Log log : getLogs(after, before))
+            if (log.event == Event.SOLVE_TASK && log.task == task && log.status == Status.OK) res++;
+        return res;
+    }
+
+    @Override
+    public Map<Integer, Integer> getAllSolvedTasksAndTheirNumber(Date after, Date before) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (Log log : getLogs(after, before)) {
+            if (log.event == Event.SOLVE_TASK) {
+                Integer count = map.get(log.task);
+                if (count == null) count = 0;
+                map.put(log.task, count + 1);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public Map<Integer, Integer> getAllDoneTasksAndTheirNumber(Date after, Date before) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (Log log : getLogs(after, before)) {
+            if (log.event == Event.DONE_TASK) {
+                Integer count = map.get(log.task);
+                if (count == null) count = 0;
+                map.put(log.task, count + 1);
+            }
+        }
+        return map;
     }
 }
 
